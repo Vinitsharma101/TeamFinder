@@ -1,16 +1,12 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
-    if (req.method === 'GET') {
-        try {
-            const projects = await prisma.project.findMany();
-            return NextResponse.json(projects);
-        } catch (error) {
-            return NextResponse.json({ error: error.message });
-        }
-    } else {
-        return NextResponse.json({ error: 'Invalid request method' });
-    }
+export async function GET() {
+  try {
+    const projects = await prisma.project.findMany();
+    return NextResponse.json(projects);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
